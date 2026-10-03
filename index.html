@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Responsibility Review | Practice Activity</title>
+<style>
+  :root {
+    --ink: #10242a;
+    --ink-2: #3a4d53;
+    --muted: #677a80;
+    --line: #dfe8e6;
+    --paper: #ffffff;
+    --teal: #134f5c;
+    --teal-2: #1c6b7b;
+    --teal-t: #dcefed;
+    --violet: #582fc1;
+    --violet-t: #ebe4ff;
+    --sea: #12a57a;
+    --sea-t: #d6f6ea;
+    --peri: #4c6ef5;
+    --peri-t: #e3e9ff;
+    --mango: #f08c28;
+    --mango-d: #a8540a;
+    --mango-t: #fff0de;
+    --rose: #d6264f;
+    --rose-t: #ffe2e8;
+    --r-xl: 22px; --r-lg: 17px; --r-md: 12px;
+    --shadow: 0 1px 2px rgba(16,36,42,.06), 0 10px 28px rgba(19,79,92,.10);
+    --shadow-hi: 0 3px 8px rgba(16,36,42,.1), 0 18px 36px rgba(19,79,92,.16);
+    --head: Optima, Candara, "Segoe UI", "Gill Sans", system-ui, sans-serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--body); font-size: 16px; line-height: 1.55; color: var(--ink);
+    background-color: #ecf8f4;
+    background-image:
+      radial-gradient(44rem 30rem at -6% -8%, rgba(60,207,158,.55), transparent 62%),
+      radial-gradient(42rem 30rem at 106% 2%, rgba(108,140,255,.52), transparent 60%),
+      radial-gradient(46rem 30rem at 104% 98%, rgba(255,159,67,.48), transparent 62%),
+      radial-gradient(42rem 30rem at -6% 102%, rgba(88,47,193,.30), transparent 60%);
+    min-height: 100vh; overflow-x: hidden; position: relative;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .28;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding: 18px 16px 44px; }
+  h1, h2, h3, h4 { margin: 0; line-height: 1.18; font-family: var(--head); }
+  h1:focus, h2:focus, h3:focus { outline: none; }
+  p { margin: 0; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+  :focus-visible { outline: 3px solid var(--peri); outline-offset: 3px; }
+
+  /* Header */
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .uni b { display: block; font-family: var(--head); font-size: 17px; letter-spacing: .01em; }
+  .uni span { font-size: 12.5px; color: var(--ink-2); font-weight: 600; }
+  .pa { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: #fff; color: var(--teal); font-weight: 800; font-size: 13px; box-shadow: var(--shadow); border: 2px solid var(--teal); }
+  .pa i { width: 9px; height: 9px; border-radius: 50%; background: var(--sea); box-shadow: 0 0 0 3px var(--sea-t); }
+
+  /* Review queue */
+  .queue { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 16px; list-style: none; padding: 0; }
+  .tk { position: relative; background: rgba(255,255,255,.78); border-radius: var(--r-lg); padding: 11px 12px; border: 2px dashed #c3d6d2; min-width: 0; backdrop-filter: blur(5px); }
+  .tk small { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .tk b { display: block; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tk .stamp { display: inline-block; margin-top: 6px; transform: rotate(-3deg); font-size: 9.5px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; padding: 2px 6px; border: 2px solid currentColor; border-radius: 6px; background: #fff; }
+  .tk.now { border-style: solid; border-color: var(--teal); background: #fff; box-shadow: var(--shadow); }
+  .tk.done { border-style: solid; border-color: transparent; background: #fff; }
+  .st-deploy { color: var(--peri); } .st-modify { color: var(--mango-d); } .st-pause { color: var(--violet); } .st-pending { color: #9db0ad; }
+
+  /* Common */
+  .card { background: var(--paper); border-radius: var(--r-xl); box-shadow: var(--shadow); padding: 22px; }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-2); }
+  .hint { font-size: 13.5px; color: var(--muted); }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  /* Hero */
+  .hero { position: relative; overflow: hidden; border-radius: var(--r-xl); color: #fff; padding: 32px 30px; box-shadow: var(--shadow);
+    background: radial-gradient(24rem 18rem at 92% 6%, rgba(255,159,67,.9), transparent 60%), radial-gradient(24rem 16rem at 4% 110%, rgba(60,207,158,.85), transparent 60%), linear-gradient(125deg, #0f3d47 0%, #134f5c 45%, #3d4fc4 100%); }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .4; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E"); }
+  .hero > * { position: relative; z-index: 1; }
+  .hero .eb { font-size: 12.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .92; }
+  .hero h1 { font-size: clamp(30px, 5vw, 46px); margin: 10px 0 10px; letter-spacing: -.01em; }
+  .hero p { max-width: 650px; font-size: 16.5px; opacity: .96; }
+  .verdict-key { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .vk { display: inline-flex; align-items: center; gap: 7px; background: #fff; color: var(--ink); font-size: 13px; font-weight: 800; padding: 6px 12px 6px 6px; border-radius: 999px; }
+  .vk span { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; color: #fff; }
+  .vk svg { width: 14px; height: 14px; }
+
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .co { display: flex; gap: 12px; align-items: center; margin: 6px 0 12px; }
+  .co .mk { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--teal), var(--peri)); display: grid; place-items: center; color: #fff; }
+  .co .mk svg { width: 24px; height: 24px; }
+  .co b { font-family: var(--head); font-size: 26px; display: block; line-height: 1.1; }
+  .co small { color: var(--muted); font-size: 13px; }
+  .team { margin-top: 12px; padding: 12px 14px; border-radius: var(--r-md); background: var(--sea-t); font-size: 14.5px; }
+  .team b { color: #0b6b4f; }
+  .rlist { display: grid; gap: 8px; margin-top: 4px; }
+  .rli { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; padding: 10px 12px; border-radius: var(--r-md); border: 1.5px solid var(--line); }
+  .rli .ri { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #fff; }
+  .rli .ri svg { width: 21px; height: 21px; }
+  .rli b { display: block; font-size: 14.5px; }
+  .rli span { font-size: 13px; color: var(--muted); }
+
+  /* Buttons */
+  .btn { appearance: none; border: 0; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 22px; border-radius: 14px; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-go { background: var(--teal); color: #fff; box-shadow: 0 8px 0 -2px var(--sea), 0 12px 22px rgba(19,79,92,.25); }
+  .btn-go:hover:not(:disabled) { transform: translateY(-1px); background: #0f414c; }
+  .btn-go:disabled { background: #b9c7c4; box-shadow: none; cursor: not-allowed; }
+  .btn-alt { background: #fff; color: var(--violet); border: 2px solid var(--violet); }
+  .btn-alt:hover { background: var(--violet-t); }
+
+  /* Round header */
+  .rhead { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
+  .rhead .rtag { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--teal-2); }
+  .rhead .rtag span { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--teal); color: #fff; }
+  .rhead .rtag svg { width: 15px; height: 15px; }
+  .rhead h2 { font-size: clamp(23px, 3.3vw, 31px); margin: 8px 0 6px; }
+  .rhead p { color: var(--ink-2); font-size: 15.5px; max-width: 720px; }
+  .phase { display: flex; gap: 6px; }
+  .ph { font-size: 12px; font-weight: 800; padding: 6px 10px; border-radius: 999px; background: #edf3f2; color: var(--muted); white-space: nowrap; }
+  .ph.on { background: var(--teal); color: #fff; }
+  .ph.ok { background: var(--sea-t); color: #0b6b4f; }
+
+  .work { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .panel-sticky { position: sticky; top: 12px; }
+
+  /* Evidence tabs */
+  .ev-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .ev-head h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .ev-head h3 svg { width: 20px; height: 20px; color: var(--teal); }
+  .meter { font-size: 12.5px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--mango-t); color: var(--mango-d); }
+  .meter.done { background: var(--sea-t); color: #0b6b4f; }
+  .tabs { display: grid; grid-template-columns: 190px 1fr; gap: 12px; }
+  .tablist { display: flex; flex-direction: column; gap: 6px; }
+  .tab { appearance: none; font: inherit; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 11px; border: 1.5px solid var(--line); background: #f7faf9; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+  .tab .tdot { width: 9px; height: 9px; border-radius: 50%; background: var(--mango); flex-shrink: 0; }
+  .tab.seen .tdot { background: var(--sea); }
+  .tab[aria-selected="true"] { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .tab[aria-selected="true"] .tdot { background: #fff; }
+  .tabpanel { border-radius: var(--r-lg); background: #f7faf9; border: 1.5px solid var(--line); padding: 18px; min-height: 180px; }
+  .tabpanel h4 { font-size: 17px; margin-bottom: 8px; color: var(--teal); }
+  .tabpanel p { font-size: 15px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .fact { background: #fff; border-radius: 10px; padding: 8px 12px; border: 1.5px solid var(--line); }
+  .fact b { display: block; font-family: var(--mono); font-size: 18px; color: var(--teal); }
+  .fact span { font-size: 12px; color: var(--muted); font-weight: 700; }
+
+  /* Decision panel */
+  .dp h3 { font-size: 19px; margin-bottom: 4px; }
+  .lock { display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: var(--r-md); background: var(--mango-t); color: var(--mango-d); font-weight: 700; font-size: 14px; margin: 10px 0; }
+  .lock svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .vcards { display: grid; gap: 10px; margin-top: 12px; }
+  .vcards.off { opacity: .45; pointer-events: none; }
+  .vc { appearance: none; font: inherit; color: inherit; text-align: left; cursor: pointer; border: 2px solid var(--line); border-radius: var(--r-lg); background: #fff; padding: 14px; display: grid; gap: 6px; position: relative; transition: all .15s ease; }
+  .vc:hover:not(:disabled) { border-color: #9fc9c2; box-shadow: var(--shadow-hi); transform: translateY(-2px); }
+  .vc .vt { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; border: 2px solid currentColor; justify-self: start; transform: rotate(-2deg); }
+  .vc .vt svg { width: 12px; height: 12px; }
+  .vc h4 { font-size: 16px; font-family: var(--body); font-weight: 800; padding-right: 26px; }
+  .vc p { font-size: 13.8px; color: var(--ink-2); }
+  .vc .tr { font-size: 12.8px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+  .vc .tr b { color: var(--ink-2); }
+  .vc .ck { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 7px; border: 2px solid #b9cbc7; display: grid; place-items: center; color: #fff; }
+  .vc .ck svg { width: 14px; height: 14px; opacity: 0; }
+  .vc[aria-checked="true"] { border-color: var(--teal); background: #f1faf8; box-shadow: 0 0 0 4px rgba(19,79,92,.12); }
+  .vc[aria-checked="true"] .ck { background: var(--teal); border-color: var(--teal); }
+  .vc[aria-checked="true"] .ck svg { opacity: 1; }
+  .vc:disabled { cursor: default; }
+
+  /* Dashboard */
+  .dash-wrap { overflow-x: auto; border-radius: var(--r-lg); border: 1.5px solid var(--line); }
+  table.dash { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  .dash th { text-align: left; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 10px 12px; background: #f2f7f6; font-weight: 800; }
+  .dash td { padding: 0; border-top: 1px solid var(--line); }
+  .dash .rbtn { appearance: none; font: inherit; color: inherit; width: 100%; background: #fff; border: 0; cursor: pointer; display: grid; grid-template-columns: 1.9fr .8fr .9fr .9fr .9fr .9fr 28px; align-items: center; text-align: left; padding: 10px 12px; gap: 6px; }
+  .dash .rbtn:hover { background: #f6fbfa; }
+  .dash .rbtn .nm { font-weight: 800; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .dash .rk { font-family: var(--mono); font-size: 11.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: #edf3f2; color: var(--muted); }
+  .dash .num { font-family: var(--mono); font-weight: 700; }
+  .dash .flagged { font-size: 10.5px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; color: var(--rose); border: 1.5px solid var(--rose); border-radius: 5px; padding: 1px 5px; margin-left: 2px; }
+  .dash .chev { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--teal-t); color: var(--teal); transition: transform .2s ease; }
+  .dash .chev svg { width: 14px; height: 14px; }
+  .dash .rbtn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .dash .note { display: none; padding: 10px 14px 14px; background: #f6fbfa; font-size: 14px; }
+  .dash .note.open { display: block; }
+  .dash .note b { color: var(--teal); }
+  .bar { height: 7px; border-radius: 999px; background: #e7efed; margin-top: 4px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--peri); border-radius: 999px; }
+  .sys-rec { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 12px 14px; border-radius: var(--r-md); background: var(--rose-t); font-size: 14.5px; }
+  .sys-rec svg { width: 20px; height: 20px; color: var(--rose); flex-shrink: 0; margin-top: 1px; }
+
+  /* Data fields */
+  .purpose { padding: 14px 16px; border-radius: var(--r-lg); background: linear-gradient(120deg, var(--peri-t), var(--sea-t)); margin-bottom: 14px; }
+  .purpose small { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-2); }
+  .purpose b { font-size: 16px; }
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .fd { appearance: none; font: inherit; color: inherit; text-align: left; cursor: pointer; border: 2px solid var(--line); border-radius: var(--r-lg); background: #fff; padding: 12px; display: grid; grid-template-columns: 36px 1fr 24px; gap: 10px; align-items: center; transition: all .15s ease; }
+  .fd:hover:not(:disabled) { border-color: #9fc9c2; transform: translateY(-1px); }
+  .fd .fi { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--teal-t); color: var(--teal); }
+  .fd .fi svg { width: 19px; height: 19px; }
+  .fd b { font-size: 14.5px; display: block; }
+  .fd span.sub { font-size: 12.5px; color: var(--muted); }
+  .fd .box { width: 24px; height: 24px; border-radius: 7px; border: 2px solid #b9cbc7; display: grid; place-items: center; color: #fff; }
+  .fd .box svg { width: 15px; height: 15px; opacity: 0; }
+  .fd[aria-checked="true"] { border-color: var(--teal); background: #f1faf8; }
+  .fd[aria-checked="true"] .box { background: var(--teal); border-color: var(--teal); }
+  .fd[aria-checked="true"] .box svg { opacity: 1; }
+  .fd.good { border-color: var(--sea) !important; }
+  .fd.bad { border-color: var(--rose) !important; background: var(--rose-t) !important; }
+  .acc { display: grid; gap: 8px; margin-top: 10px; }
+  .ac { appearance: none; font: inherit; color: inherit; text-align: left; cursor: pointer; padding: 11px 12px; border-radius: var(--r-md); border: 2px solid var(--line); background: #fff; font-size: 14px; font-weight: 700; display: flex; gap: 10px; align-items: center; }
+  .ac .rd { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #b9cbc7; flex-shrink: 0; }
+  .ac[aria-checked="true"] { border-color: var(--teal); background: #f1faf8; }
+  .ac[aria-checked="true"] .rd { border: 5px solid var(--teal); }
+  .ac:disabled { cursor: default; }
+
+  /* Evidence cards (R4) */
+  .ecards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .ec { border-radius: var(--r-lg); border: 1.5px solid var(--line); background: #fff; overflow: hidden; }
+  .ec button { appearance: none; font: inherit; color: inherit; width: 100%; text-align: left; cursor: pointer; border: 0; background: #f7faf9; padding: 12px; display: flex; gap: 10px; align-items: center; }
+  .ec .ei { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex-shrink: 0; }
+  .ec .ei svg { width: 18px; height: 18px; }
+  .ec b { font-size: 14.5px; display: block; }
+  .ec small { font-size: 12px; color: var(--muted); font-weight: 700; }
+  .ec .body { display: none; padding: 12px 14px 14px; font-size: 14px; }
+  .ec.open .body { display: block; }
+  .ec.open button { background: #fff; }
+  .ec .body q { display: block; font-style: italic; color: var(--ink-2); margin-bottom: 6px; quotes: none; }
+  .ec .body .kpi { font-family: var(--mono); font-weight: 800; color: var(--teal); }
+
+  /* Outcome */
+  .oc-head { border-radius: var(--r-xl); padding: 22px 24px; color: #fff; position: relative; overflow: hidden; box-shadow: var(--shadow); }
+  .oc-best { background: linear-gradient(120deg, #0b5a47, #12a57a 60%, #3ccf9e); }
+  .oc-partial { background: linear-gradient(120deg, #8a3f05, #c96612 55%, #f08c28); }
+  .oc-weak { background: linear-gradient(120deg, #8e1531, #d6264f 60%, #f0577a); }
+  .oc-head .big-stamp { display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border: 2.5px solid #fff; border-radius: 7px; transform: rotate(-3deg); margin-bottom: 10px; }
+  .oc-head h2 { font-size: clamp(21px, 3vw, 27px); }
+  .oc-head p { margin-top: 6px; opacity: .95; font-size: 14.5px; }
+  .indic { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+  .ind { background: #fff; border-radius: var(--r-lg); padding: 12px; box-shadow: var(--shadow); text-align: center; }
+  .ind .ii { width: 34px; height: 34px; border-radius: 10px; margin: 0 auto 6px; display: grid; place-items: center; background: var(--teal-t); color: var(--teal); }
+  .ind .ii svg { width: 18px; height: 18px; }
+  .ind b { display: block; font-size: 12.5px; margin-bottom: 6px; }
+  .rt { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; }
+  .rt-S { background: var(--sea-t); color: #0b6b4f; } .rt-M { background: var(--mango-t); color: var(--mango-d); } .rt-W { background: var(--rose-t); color: var(--rose); }
+  .cons { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .cn { border-radius: var(--r-lg); padding: 14px; background: #f7faf9; border-left: 4px solid var(--teal); }
+  .cn h4 { font-size: 13px; font-family: var(--body); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
+  .cn h4 svg { width: 16px; height: 16px; }
+  .cn p { font-size: 14.5px; }
+  .why { font-size: 15.5px; }
+  .chipset { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .cc { font-size: 12.5px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--violet-t); color: var(--violet); }
+  .better { margin-top: 12px; font-size: 14.5px; padding: 12px 14px; border-radius: var(--r-md); background: var(--sea-t); }
+  .better b { color: #0b6b4f; }
+  .showed { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sh { border-radius: var(--r-lg); padding: 14px; }
+  .sh h4 { font-size: 13px; font-family: var(--body); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+  .sh p { font-size: 14.5px; }
+  .sh-y { background: var(--peri-t); } .sh-y h4 { color: var(--peri); }
+  .sh-n { background: var(--mango-t); } .sh-n h4 { color: var(--mango-d); }
+  .flist { display: grid; gap: 8px; }
+  .fl { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start; padding: 10px 12px; border-radius: var(--r-md); background: #f7faf9; }
+  .fl .fx { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+  .fl .fx svg { width: 15px; height: 15px; }
+  .fl b { font-size: 14.5px; display: block; }
+  .fl span { font-size: 13.5px; color: var(--ink-2); }
+  .fl em { font-style: normal; font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .trust4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+  .t4 { border-radius: var(--r-lg); padding: 12px; background: #f7faf9; border-top: 4px solid var(--c); }
+  .t4 b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .t4 p { font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+
+  /* Final */
+  .areas { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .ar { background: #fff; border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow); border-left: 5px solid var(--c); }
+  .ar .at { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .ar h4 { font-size: 16px; }
+  .ar .seg { display: flex; gap: 4px; margin: 10px 0 8px; }
+  .ar .seg i { flex: 1; height: 8px; border-radius: 999px; background: #e7efed; }
+  .ar .seg i.on { background: var(--c); }
+  .ar p { font-size: 13.5px; color: var(--ink-2); }
+  .ar p b { color: var(--ink); }
+  .recap { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+  .rc { border-radius: var(--r-md); padding: 12px; background: #f7faf9; position: relative; }
+  .rc small { font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .rc b { display: block; font-size: 14px; margin: 3px 0 8px; }
+
+  .foot { text-align: center; font-size: 12.5px; color: var(--ink-2); margin-top: 22px; }
+  .fade { animation: rise .35s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 980px) {
+    .work { grid-template-columns: minmax(0,1fr); }
+    .panel-sticky { position: static; }
+    .indic { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .recap { grid-template-columns: 1fr 1fr; }
+    .trust4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .intro-grid, .cons, .showed, .areas, .fields, .ecards { grid-template-columns: minmax(0,1fr); }
+    .tabs { grid-template-columns: minmax(0,1fr); }
+    .tablist { flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+    .tablist::-webkit-scrollbar { display: none; }
+    .tab { flex-shrink: 0; }
+    .queue { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
+    .tk { padding: 8px; }
+    .tk b { font-size: 11.5px; white-space: normal; }
+    .tk .stamp { transform: none; font-size: 8.5px; }
+    .rhead { grid-template-columns: 1fr; }
+    .card { padding: 18px; }
+    .hero { padding: 26px 20px; }
+    .indic { grid-template-columns: 1fr 1fr; }
+    .row .btn { width: 100%; }
+    table.dash { min-width: 0; }
+    .dash thead { display: none; }
+    .dash .rbtn { grid-template-columns: repeat(3, minmax(0,1fr)); row-gap: 10px; position: relative; padding-right: 44px; }
+    .dash .rbtn .nm { grid-column: 1 / -1; }
+    .dash .rbtn .chev { position: absolute; right: 12px; top: 10px; }
+    .dash .m::before { content: attr(data-l); display: block; font-family: var(--body); font-size: 10.5px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  }
+  @media (max-width: 460px) { .recap, .trust4 { grid-template-columns: 1fr; } .queue small { font-size: 9px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="uni"><b>Nexford University</b><span>BUS2125 The World of Business &middot; Section 3: Ethics in the Digital Age</span></div>
+    <span class="pa"><i aria-hidden="true"></i>Practice Activity</span>
+  </header>
+  <nav aria-label="Review queue"><ol class="queue" id="queue"></ol></nav>
+  <main id="app"></main>
+  <p class="sr" id="live" aria-live="polite"></p>
+  <p class="foot">Practice Activity &middot; Ungraded &middot; Nexford University</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============ Icons (rounded line set) ============ */
+  var P = {
+    arm: '<path d="M4 20.5h9"/><path d="M8.5 20.5v-3.5"/><circle cx="8.5" cy="15.5" r="1.5"/><path d="M9.5 14.3l3.6-5"/><circle cx="13.8" cy="8.2" r="1.5"/><path d="M15.2 7.6l3.5-1.8"/><path d="M18.7 5.8l1.8 2.2"/><path d="M18.7 5.8l.6-2.8"/>',
+    board: '<rect x="3" y="4" width="18" height="15" rx="2.5"/><path d="M7 15v-3"/><path d="M11 15V9"/><path d="M15 15v-5"/><path d="M3 8h18"/>',
+    form: '<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 8h7"/><path d="M8.5 12h7"/><rect x="8.5" y="15" width="2.5" height="2.5" rx=".6"/><path d="M13 16.3h2.5"/>',
+    bell: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/><path d="M12 3v1.5"/>',
+    house: '<path d="M3.5 11L12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
+    lens: '<circle cx="10.5" cy="10.5" r="6.2"/><path d="M15.2 15.2L20.5 20.5"/>',
+    lock: '<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.3"/>',
+    rocket: '<path d="M12 3c3.5 2 5 5.5 4.5 10l-2.5 3h-4L7.5 13C7 8.5 8.5 5 12 3z"/><circle cx="12" cy="9.5" r="1.7"/><path d="M9.5 16l-2 4 3.5-1.5"/><path d="M14.5 16l2 4-3.5-1.5"/>',
+    pencil: '<path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5z"/><path d="M13.5 7l3 3"/>',
+    pause: '<rect x="6.5" y="5" width="3.5" height="14" rx="1.2"/><rect x="14" y="5" width="3.5" height="14" rx="1.2"/>',
+    gauge: '<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l3.5-4.5"/><circle cx="12" cy="16" r="1.4"/>',
+    users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.3 3-5.2 6-5.2s5.4 1.9 6 5.2"/><path d="M15.5 4.9a3.2 3.2 0 0 1 0 6.2"/><path d="M17.8 14.6c1.8.7 3 2.4 3.3 4.9"/>',
+    smile: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 14c.9 1.3 2.1 2 3.5 2s2.6-.7 3.5-2"/><path d="M9 9.5h.01"/><path d="M15 9.5h.01"/>',
+    shield: '<path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/>',
+    pin: '<circle cx="12" cy="7.5" r="3.2"/><path d="M5.5 20.5c.7-3.8 3.3-6 6.5-6s5.8 2.2 6.5 6"/><path d="M17.5 3.5l2 2-2 2"/>',
+    eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+    equal: '<rect x="3.5" y="4" width="7" height="7" rx="1.6"/><rect x="13.5" y="4" width="7" height="7" rx="1.6"/><rect x="3.5" y="14" width="7" height="7" rx="1.6"/><rect x="13.5" y="14" width="7" height="7" rx="1.6"/>',
+    chat: '<path d="M4 5.5h16v10H10l-4.5 4v-4H4z"/><path d="M8 9.5h8"/><path d="M8 12.5h5"/>',
+    wrench: '<path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.5-7.5"/><path d="M14.5 6.5L17 4l3 3-2.5 2.5"/>',
+    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    route: '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/>',
+    phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+    gps: '<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7.5"/><path d="M12 2v2.5"/><path d="M12 19.5V22"/><path d="M2 12h2.5"/><path d="M19.5 12H22"/>',
+    cake: '<rect x="4" y="11" width="16" height="9.5" rx="2"/><path d="M4 15.5c2 1.2 4 1.2 6 0s4-1.2 6 0 3 1 4 .5"/><path d="M12 11V7.5"/><path d="M12 4.5c.9.8.9 2 0 3-.9-1-.9-2.2 0-3z"/>',
+    dollar: '<path d="M12 3v18"/><path d="M16.5 7c-.7-1.5-2.4-2.3-4.5-2.3-2.6 0-4.3 1.3-4.3 3.2 0 4.4 9 2.6 9 7.2 0 2-1.9 3.4-4.7 3.4-2.3 0-4-.9-4.7-2.5"/>',
+    tool: '<path d="M4 20l6.5-6.5"/><path d="M10.5 13.5a4.5 4.5 0 1 0 2-7.5l3 3-2 2-3-3a4.5 4.5 0 0 0 0 5.5z"/>',
+    log: '<rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>',
+    quote: '<path d="M5 17.5c0-4 1.5-7.5 5-9.5"/><path d="M13 17.5c0-4 1.5-7.5 5-9.5"/><circle cx="7" cy="16.5" r="2.5"/><circle cx="15" cy="16.5" r="2.5"/>',
+    headset: '<path d="M4.5 14v-2a7.5 7.5 0 0 1 15 0v2"/><rect x="3.5" y="13" width="4" height="6" rx="1.5"/><rect x="16.5" y="13" width="4" height="6" rx="1.5"/><path d="M18.5 19c0 1.4-1.6 2-4 2h-1.5"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5"/><path d="M12 18.5V21"/><path d="M3 12h2.5"/><path d="M18.5 12H21"/><path d="M5.6 5.6l1.8 1.8"/><path d="M16.6 16.6l1.8 1.8"/><path d="M5.6 18.4l1.8-1.8"/><path d="M16.6 7.4l1.8-1.8"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    cross: '<path d="M6.5 6.5l11 11"/><path d="M17.5 6.5l-11 11"/>',
+    half: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17"/>',
+    arrow: '<path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>',
+    chev: '<path d="M6 9l6 6 6-6"/>',
+    restart: '<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/>'
+  };
+  function ic(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + P[n] + '</svg>'; }
+
+  var V = {
+    deploy: { label: "Deploy as proposed", icon: "rocket", cls: "st-deploy", stamp: "Deployed" },
+    modify: { label: "Modify", icon: "pencil", cls: "st-modify", stamp: "Modified" },
+    pause: { label: "Pause", icon: "pause", cls: "st-pause", stamp: "Paused" },
+    keep: { label: "Keep running", icon: "rocket", cls: "st-deploy", stamp: "Kept running" }
+  };
+  var IND = [["bv", "Business Value", "gauge"], ["emp", "Employee Impact", "users"], ["cust", "Customer Impact", "smile"], ["trust", "Digital Trust", "shield"], ["acct", "Accountability", "pin"]];
+  var RT = { S: "Strengthened", M: "Mixed", W: "Weakened" };
+
+  /* ============ Rounds ============ */
+  var R1 = {
+    key: "auto", short: "Dispatch automation", icon: "arm", topic: "Automation and work",
+    title: "The Automated Dispatch Proposal",
+    intro: "Corvane's operations director wants to replace manual dispatching with an automated scheduling system before winter. Inspect the proposal packet, then decide how it should be implemented.",
+    tabs: [
+      { t: "Operational problem", h: "Manual dispatch is slowing service", p: "Dispatchers assign about 1,100 repair visits a week by phone and spreadsheet. During last winter's peak, many customers waited more than two days, and manual routing added drive time to technicians' days.", f: [["18%", "waited 2+ days"], ["40 min", "extra driving per tech, per day"]] },
+      { t: "Expected benefit", h: "Faster, more accurate scheduling", p: "The system assigns visits based on location, technician skills, and parts on the truck. Corvane expects same-day booking for most calls, shorter drive times, and fewer scheduling errors.", f: [["Same day", "booking for most calls"], ["Fewer", "scheduling errors"]] },
+      { t: "People affected", h: "Dispatchers, technicians, and customers", p: "The 14-person dispatch team would see most of its work automated. 52 technicians would receive assignments from the system instead of a person. Customers would get instant time slots online or by phone.", f: [["14", "dispatchers"], ["52", "technicians"]] },
+      { t: "Role changes", h: "Old roles shrink, new roles appear", p: "Most manual assignment work would end. The proposal creates 3 dispatch exception coordinator roles and 2 system analyst roles. It does not say who can override an automated assignment when something goes wrong.", f: [["5", "new roles"], ["None", "named override owner"]] },
+      { t: "Pressure", h: "Winter is coming", p: "The winter peak starts in 10 weeks. A competitor already offers same-day booking, and leadership wants the system live before the peak.", f: [["10 weeks", "to winter peak"]] }
+    ],
+    q: "How should Corvane implement the automated dispatch system?",
+    options: [
+      { v: "deploy", title: "Full cutover in four weeks", text: "Launch everywhere before the peak. Reduce the dispatch team to the 5 new roles with two weeks' notice and self-guided training.", trade: "Fastest benefits, largest workforce disruption.",
+        tier: "weak", pts: {},
+        head: "The system is live for the peak, but the change lands hard on the dispatch team and no one owns its mistakes.",
+        ops: "Same-day booking is ready for the winter peak, and drive times begin to fall.",
+        emp: "Nine dispatchers lose their roles with two weeks' notice, and the five who stay learn new roles on their own.",
+        acct: "No one was given authority to override an automated assignment, so early routing errors on emergency calls sit unresolved.",
+        lt: "Fast gains, but lost experience and unclear responsibility make later problems harder to fix.",
+        ind: { bv: "S", emp: "W", cust: "M", trust: "W", acct: "W" },
+        why: "Automation itself is not the issue; how its benefits, costs, and risks are distributed is. Here, Corvane captured the benefits quickly while dispatchers and emergency customers carried most of the risk, and responsibility for the system's decisions was never assigned." },
+      { v: "modify", title: "Phased rollout with transition", text: "Launch region by region over 10 weeks. Train dispatchers for the new roles first, offer reassignment before any reductions, and let exception coordinators review and override emergency assignments.", trade: "Slower benefits: only about half the region is live at the peak.",
+        tier: "best", pts: { tech: 1, auto: 2, acct: 1 },
+        head: "Benefits arrive more slowly, but the team is prepared and responsibility for the system stays clear.",
+        ops: "About half of service areas run on the new system at the peak, so efficiency gains arrive more gradually.",
+        emp: "Dispatchers know the timeline, train for new roles first, and most move into new or other open positions before any reductions.",
+        acct: "Exception coordinators review emergency assignments and have authority to override the system.",
+        lt: "A planned transition and human oversight support the system over time.",
+        ind: { bv: "M", emp: "S", cust: "S", trust: "S", acct: "S" },
+        why: "This approach manages timing, communication, training, reassignment, and human oversight. It clarifies roles, including who can intervene, before the system starts making decisions." },
+      { v: "pause", title: "Limited pilot only", text: "Use the system only for routine maintenance visits this winter, keep the full dispatch team on repair calls, and revisit full rollout next year.", trade: "Least disruption, smallest operational gains.",
+        tier: "partial", pts: { tech: 1, auto: 1 },
+        head: "Disruption is avoided for now, but the main delays remain and the workforce transition is postponed.",
+        ops: "Routine visits book faster, but repair calls, the main source of delays, stay manual through the peak.",
+        emp: "No roles change this year, but dispatchers get no clear picture of what comes next.",
+        acct: "The pilot is small enough for dispatchers to catch errors, though no permanent oversight role is defined.",
+        lt: "Avoids immediate harm, but decisions about roles and transition are delayed rather than managed.",
+        ind: { bv: "W", emp: "M", cust: "M", trust: "M", acct: "M" },
+        why: "Limiting the rollout reduces disruption, but it postpones decisions about roles, training, and transition instead of planning them. Responsible implementation manages change rather than only delaying it." }
+    ],
+    concepts: ["Roles: who decides and who can override", "Automation and work", "Human oversight", "Long-term effects"]
+  };
+
+  var R2 = {
+    key: "perf", short: "Performance data", icon: "board", topic: "Digital performance data",
+    title: "The Technician Dashboard",
+    intro: "Corvane's new performance system ranks field technicians each week by jobs completed. It has flagged one technician for a performance improvement plan. Open each row to see the team lead's context, then decide how management should respond.",
+    rows: [
+      { n: "Dana R.", jobs: 31, time: "1.4 h", down: "1 h", cx: 10, rep: 4, note: "Mostly routine filter and thermostat jobs this month. Four customers needed a second visit for the same problem." },
+      { n: "Leo B.", jobs: 29, time: "1.5 h", down: "0 h", cx: 15, rep: 2, note: "A steady mix of routine and mid-level repairs. No unusual issues." },
+      { n: "Priya S.", jobs: 26, time: "1.8 h", down: "1 h", cx: 25, rep: 1, note: "Covers new installs, which include longer setup and testing steps." },
+      { n: "Marcus T.", jobs: 17, time: "2.7 h", down: "6 h", cx: 55, rep: 0, flag: true, note: "Assigned most furnace replacements this month. The tablet app could not sync in the mountain service area for six hours, so several completed jobs were logged late and are missing from this count." }
+    ],
+    q: "How should management respond to the dashboard?",
+    options: [
+      { v: "deploy", title: "Follow the ranking", text: "Place Marcus on a performance improvement plan as the system recommends, and share weekly rankings with the team to encourage output.", trade: "Quick and consistent, but treats the ranking as the decision.",
+        tier: "weak", pts: {},
+        head: "The ranking penalizes the technician handling the hardest work, and the team starts avoiding complex jobs.",
+        ind: { bv: "W", emp: "W", cust: "W", trust: "W", acct: "W" },
+        why: "Management used a digital measure without understanding what it represented. The job count ignored complexity, downtime, and late logging, and the decision was handed to the ranking instead of staying with managers." },
+      { v: "modify", title: "Use the data with context", text: "Hold the plan. Team leads review complexity, downtime, and repeat visits with each technician, correct the late-logged jobs, use the dashboard to start conversations, and follow up with Dana on repeat visits.", trade: "Takes manager time each week and slows decisions.",
+        tier: "best", pts: { perf: 2, acct: 1 },
+        head: "Managers see the full picture: Marcus's numbers reflect harder jobs and downtime, while Dana's speed is creating repeat visits.",
+        ind: { bv: "S", emp: "S", cust: "S", trust: "S", acct: "S" },
+        why: "The dashboard becomes useful information rather than an automatic verdict. Combining the measure with context, human oversight, and managerial judgment keeps evaluations consistent and keeps responsibility with managers." },
+      { v: "pause", title: "Set the dashboard aside", text: "Stop using dashboard data in evaluations and return to supervisor judgment alone until a better system is found.", trade: "Prevents unfair rankings, but discards useful signals.",
+        tier: "partial", pts: { perf: 1 },
+        head: "Unfair evaluations stop, but managers also lose useful signals, such as Dana's repeat visits.",
+        ind: { bv: "M", emp: "M", cust: "M", trust: "M", acct: "M" },
+        why: "Pausing avoids misuse, but the data was not the problem; using it without context was. Digital measures can support judgment when managers understand what they represent." }
+    ],
+    showed: "Marcus completed the fewest jobs this week, and Dana completed the most.",
+    notShowed: "Marcus handled most complex repairs, lost six hours to downtime, had late-logged jobs, and had zero repeat visits. Dana's top count came with the most repeat visits.",
+    concepts: ["Digital performance data needs context", "Human oversight and judgment", "Consistency", "Accountability stays with managers"]
+  };
+
+  var R3 = {
+    key: "data", short: "Booking app data", icon: "form", topic: "Responsible data use",
+    title: "The Booking App Upgrade",
+    intro: "Corvane's upgraded booking app can collect six types of customer information by default. Keep only what the stated purpose requires, then decide who should have access to it.",
+    purpose: "Send the right technician with the right parts, and text customers accurate arrival times.",
+    fields: [
+      { k: "addr", t: "Service address", s: "Where the repair takes place", icon: "house", need: true, fb: "Purpose and use: the technician must reach the home, and routing depends on it." },
+      { k: "model", t: "Equipment type and model", s: "Furnace, AC, or water heater details", icon: "tool", need: true, fb: "Relevance: tells the technician which parts to load before the visit." },
+      { k: "mobile", t: "Mobile number", s: "For arrival-time texts", icon: "phone", need: true, fb: "Use: arrival-time texts are part of the stated purpose." },
+      { k: "income", t: "Household income range", s: "Optional profile field", icon: "dollar", need: false, fb: "No link to dispatching parts or texting arrival times, so it has no defined purpose here." },
+      { k: "gps", t: "Continuous phone location", s: "Tracks the customer's phone all day", icon: "gps", need: false, fb: "Arrival texts reach the customer's phone without tracking where the customer goes. It is not necessary for the purpose." },
+      { k: "dob", t: "Date of birth", s: "Profile field", icon: "cake", need: false, fb: "Not needed to schedule, prepare for, or complete a repair." }
+    ],
+    access: [
+      { t: "The assigned technician and the dispatch team", ok: true },
+      { t: "All Corvane employees, so anyone can help a customer", ok: false },
+      { t: "Corvane's marketing team and partner companies, to offer related products", ok: false }
+    ],
+    concepts: ["Purpose", "Relevance", "Use", "Access"]
+  };
+
+  var R4 = {
+    key: "trust", short: "Auto-cancel incident", icon: "bell", topic: "Digital trust",
+    title: "The Auto-Cancel Incident",
+    intro: "Three months ago Corvane launched an automatic confirmation system. It is meeting its operational goal, but complaints are rising. Open each piece of evidence, then decide how management should respond.",
+    evidence: [
+      { t: "Monitoring report", s: "System data", icon: "log", c: "var(--peri)", body: '<p>Unused appointment slots fell <span class="kpi">30%</span>, meeting the system\'s goal.</p><p style="margin-top:6px">Automatic cancellations rose from about <span class="kpi">40</span> to <span class="kpi">340</span> a month. About 4 in 10 canceled customers rebooked within a day, showing they still needed service.</p>' },
+      { t: "Customer messages", s: "Complaints", icon: "quote", c: "var(--rose)", body: '<q>I was at work and saw the text three hours later. My appointment was gone and the furnace is still out.</q><q>There was no number in the text to call, and no way to reply.</q>' },
+      { t: "Call center notes", s: "Employee reports", icon: "headset", c: "var(--mango)", body: '<p>Representatives tell customers "the system canceled it." Some restore the original slot; others ask customers to rebook from scratch, with no shared standard.</p>' },
+      { t: "System rule", s: "How it works", icon: "gear", c: "var(--teal)", body: '<p>An appointment cancels automatically if the customer does not reply YES within <span class="kpi">2 hours</span>. No one reviews cancellations, including no-heat emergency calls.</p>' }
+    ],
+    q: "How should management respond to the incident?",
+    options: [
+      { v: "keep", title: "Clarify the message", text: "Keep the two-hour rule. Rewrite the text so the confirmation requirement is clear and add a call-back number. Representatives keep handling restored appointments case by case.", trade: "Keeps the slot gains with minimal change.",
+        tier: "partial", pts: { trust: 1 },
+        head: "Customers understand the rule better, but emergency calls still cancel and treatment stays inconsistent.",
+        t4: { T: ["Partly", "Clearer text, but affected customers are never told what happened."], C: ["No", "Representatives still decide case by case."], A: ["No", "No one owns the rule; staff still say the system did it."], R: ["Partly", "A call-back number, but no way to question a cancellation."] },
+        ind: { bv: "S", emp: "M", cust: "M", trust: "M", acct: "W" },
+        why: "Transparency alone is not enough. Digital trust depends on transparency, consistency, accountability, and responsiveness working together, and the harmful rule is never investigated or corrected." },
+      { v: "modify", title: "Correct with oversight", text: "Stop auto-canceling no-heat emergency calls now. Contact canceled customers and restore their slots. Name the dispatch manager as owner of the rule, set one standard for restoring appointments, add a reply option to question a cancellation, and track cancellations weekly before adjusting the time limit.", trade: "Takes management time and gives back some of the slot savings.",
+        tier: "best", pts: { trust: 2, acct: 1, tech: 1 },
+        head: "Most of the efficiency gain remains, emergencies are protected, and someone is clearly responsible for the rule.",
+        t4: { T: ["Yes", "Affected customers are contacted and told what changed."], C: ["Yes", "One standard for restoring appointments."], A: ["Yes", "The dispatch manager owns, reviews, and can change the rule."], R: ["Yes", "Customers can question a cancellation and get support."] },
+        ind: { bv: "S", emp: "S", cust: "S", trust: "S", acct: "S" },
+        why: "Management monitored actual effects, kept human oversight, allowed problems to be reported, investigated the outcome, and corrected the process. All four trust factors are addressed together." },
+      { v: "pause", title: "Switch it off", text: "Turn off automatic confirmation everywhere and return to manual confirmation calls until next year's system review.", trade: "Ends the cancellations, but loses the operational gains.",
+        tier: "partial", pts: { trust: 1 },
+        head: "The cancellations stop, but so do the gains, and no one examines what went wrong.",
+        t4: { T: ["No", "Customers already affected are not contacted."], C: ["Partly", "Manual calls are more uniform, but past cases are not addressed."], A: ["No", "No owner is named and the outcome is not investigated."], R: ["Partly", "Customers can talk to a person, but past harm is not corrected."] },
+        ind: { bv: "W", emp: "M", cust: "M", trust: "M", acct: "W" },
+        why: "Stopping the harm matters, but responsible management continues after implementation: investigate the unexpected outcome, correct the process, and keep someone accountable. Switching off avoids those steps." }
+    ],
+    concepts: ["Transparency", "Consistency", "Accountability", "Responsiveness", "Monitoring and corrective action"]
+  };
+  var ROUNDS = [R1, R2, R3, R4];
+
+  /* ============ State ============ */
+  var S;
+  function reset() {
+    S = { view: 0, phase: "review", seen: {}, sel: null, acc: null, fields: {}, results: [null, null, null, null], pts: { tech: 0, auto: 0, perf: 0, data: 0, trust: 0, acct: 0 } };
+  }
+  var app = document.getElementById("app");
+  function say(t) { document.getElementById("live").textContent = t; }
+
+  /* ============ Queue ============ */
+  function renderQueue() {
+    document.getElementById("queue").innerHTML = ROUNDS.map(function (r, i) {
+      var n = i + 1, res = S.results[i];
+      var cls = res ? "done" : (S.view === n ? "now" : "");
+      var stamp = res ? '<span class="stamp ' + V[res.v].cls + '">' + V[res.v].stamp + '</span>' : (S.view === n ? '<span class="stamp st-pending" style="color:var(--teal)">In review</span>' : '<span class="stamp st-pending">Pending</span>');
+      return '<li class="tk ' + cls + '"' + (S.view === n ? ' aria-current="step"' : '') + '><small>Review ' + n + '</small><b>' + r.short + '</b>' + stamp + '</li>';
+    }).join("");
+  }
+
+  /* ============ Intro ============ */
+  function renderIntro() {
+    var colors = ["var(--teal)", "var(--peri)", "var(--violet)", "var(--mango)"];
+    app.innerHTML =
+      '<div class="stack fade">' +
+        '<section class="hero">' +
+          '<div class="eb">Section 3 &middot; Ethics in the Digital Age</div>' +
+          '<h1 tabindex="-1" id="screenTitle">Digital Responsibility Review</h1>' +
+          '<p>Four technologies are moving through Corvane\'s modernization project. Inspect the evidence for each one and decide whether it should be deployed as proposed, modified, or paused.</p>' +
+          '<div class="verdict-key">' +
+            '<span class="vk"><span style="background:var(--peri)">' + ic("rocket") + '</span>Deploy as proposed</span>' +
+            '<span class="vk"><span style="background:var(--mango)">' + ic("pencil") + '</span>Modify</span>' +
+            '<span class="vk"><span style="background:var(--violet)">' + ic("pause") + '</span>Pause</span>' +
+          '</div>' +
+        '</section>' +
+        '<div class="intro-grid">' +
+          '<section class="card">' +
+            '<div class="eyebrow">The company</div>' +
+            '<div class="co"><span class="mk">' + ic("house") + '</span><span><b>Corvane</b><small>Denver, Colorado</small></span></div>' +
+            '<p style="color:var(--ink-2)">Corvane is a home repair company that sends technicians to fix furnaces, air conditioners, and water heaters. It has about 900 employees, a call center, a dispatch team, and a growing set of digital tools.</p>' +
+            '<div class="team"><b>Your role:</b> manager on the Digital Implementation Review Team. You review technologies before and after they go live.</div>' +
+          '</section>' +
+          '<section class="card">' +
+            '<div class="eyebrow">Your review queue</div>' +
+            '<div class="rlist">' + ROUNDS.map(function (r, i) {
+              return '<div class="rli"><span class="ri" style="background:' + colors[i] + '">' + ic(r.icon) + '</span><span><b>' + r.title + '</b><span>Review ' + (i + 1) + ' &middot; ' + r.topic + '</span></span></div>';
+            }).join("") + '</div>' +
+          '</section>' +
+        '</div>' +
+        '<section class="card"><div class="row"><span class="hint">4 reviews &middot; about 10 to 12 minutes &middot; ungraded &middot; one attempt per decision, then you move on</span>' +
+          '<button class="btn btn-go" id="startBtn" type="button">Open Review 1 ' + ic("arrow") + '</button></div></section>' +
+      '</div>';
+    document.getElementById("startBtn").addEventListener("click", function () { go(1); });
+  }
+
+  /* ============ Shared builders ============ */
+  function head(r, n, phase) {
+    var ph = ["Inspect", "Decide", "Outcome"];
+    var idx = phase === "inspect" ? 0 : (phase === "decide" ? 1 : 2);
+    return '<section class="card rhead">' +
+      '<div><span class="rtag"><span>' + ic(r.icon) + '</span>Review ' + n + ' of 4 &middot; ' + r.topic + '</span>' +
+      '<h2 tabindex="-1" id="screenTitle">' + r.title + '</h2><p>' + r.intro + '</p></div>' +
+      '<div class="phase" id="phase">' + ph.map(function (p, i) { return '<span class="ph' + (i < idx ? " ok" : (i === idx ? " on" : "")) + '">' + p + '</span>'; }).join("") + '</div>' +
+    '</section>';
+  }
+  function setPhase(idx) {
+    var el = document.getElementById("phase"); if (!el) return;
+    Array.prototype.forEach.call(el.children, function (c, i) { c.className = "ph" + (i < idx ? " ok" : (i === idx ? " on" : "")); });
+  }
+  function verdictCards(r) {
+    return '<div class="vcards off" id="vcards" role="radiogroup" aria-labelledby="dq" aria-disabled="true">' + r.options.map(function (o, i) {
+      var v = V[o.v];
+      return '<button type="button" class="vc" role="radio" aria-checked="false" data-i="' + i + '" tabindex="' + (i === 0 ? 0 : -1) + '">' +
+        '<span class="vt ' + v.cls + '">' + ic(v.icon) + v.label + '</span>' +
+        '<h4>' + o.title + '</h4><p>' + o.text + '</p>' +
+        '<span class="tr"><b>Trade-off:</b> ' + o.trade + '</span>' +
+        '<span class="ck" aria-hidden="true">' + ic("check") + '</span>' +
+      '</button>';
+    }).join("") + '</div>';
+  }
+  function decisionPanel(r, need, unit) {
+    return '<section class="card dp panel-sticky">' +
+      '<div class="eyebrow">Your decision</div><h3 id="dq">' + r.q + '</h3>' +
+      '<div class="lock" id="lock">' + ic("lock") + '<span id="lockTxt">Inspect all ' + need + ' ' + unit + ' to unlock your decision.</span></div>' +
+      verdictCards(r) +
+      '<div class="row" style="margin-top:14px"><span class="hint" id="dHint">One attempt.</span>' +
+      '<button class="btn btn-go" id="decBtn" type="button" disabled>Confirm ' + ic("check") + '</button></div>' +
+    '</section>';
+  }
+  function bindVerdicts(r) {
+    var bs = app.querySelectorAll(".vc");
+    Array.prototype.forEach.call(bs, function (b, idx) {
+      b.addEventListener("click", function () { pickV(idx); });
+      b.addEventListener("keydown", function (e) {
+        var n = arrowNext(e, idx, bs.length);
+        if (n !== null) { e.preventDefault(); pickV(n); bs[n].focus(); }
+      });
+    });
+    document.getElementById("decBtn").addEventListener("click", function () { confirmRound(); });
+  }
+  function arrowNext(e, idx, len) {
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") return (idx + 1) % len;
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") return (idx - 1 + len) % len;
+    return null;
+  }
+  function pickV(i) {
+    var vc = document.getElementById("vcards");
+    if (!vc || vc.classList.contains("off")) return;
+    S.sel = i;
+    Array.prototype.forEach.call(app.querySelectorAll(".vc"), function (b, j) {
+      b.setAttribute("aria-checked", j === i ? "true" : "false");
+      b.setAttribute("tabindex", j === i ? "0" : "-1");
+    });
+    document.getElementById("decBtn").disabled = false;
+  }
+  function markSeen(key, total, unitLabel) {
+    S.seen[key] = true;
+    var n = Object.keys(S.seen).length;
+    var m = document.getElementById("evMeter");
+    if (m) { m.textContent = n + " of " + total + " inspected"; if (n >= total) m.classList.add("done"); }
+    var lt = document.getElementById("lockTxt");
+    if (n >= total) {
+      var lock = document.getElementById("lock");
+      if (lock && lock.parentNode) lock.parentNode.removeChild(lock);
+      var vc = document.getElementById("vcards");
+      if (vc && vc.classList.contains("off")) { vc.classList.remove("off"); vc.removeAttribute("aria-disabled"); setPhase(1); say("Evidence inspected. Decision unlocked."); }
+    } else if (lt) {
+      lt.textContent = "Inspect all " + total + " " + unitLabel + " to unlock your decision (" + n + " of " + total + ").";
+    }
+  }
+
+  /* ============ Round 1 ============ */
+  function renderR1() {
+    var r = R1;
+    app.innerHTML = '<div class="stack fade">' + head(r, 1, "inspect") +
+      '<div class="work">' +
+        '<section class="card">' +
+          '<div class="ev-head"><h3>' + ic("lens") + 'Proposal packet</h3><span class="meter" id="evMeter">0 of ' + r.tabs.length + ' inspected</span></div>' +
+          '<div class="tabs"><div class="tablist" role="tablist" aria-label="Proposal sections">' + r.tabs.map(function (t, i) {
+            return '<button type="button" class="tab" role="tab" id="tb' + i + '" aria-selected="false" aria-controls="tpanel" tabindex="' + (i === 0 ? 0 : -1) + '" data-i="' + i + '"><span class="tdot"></span>' + t.t + '</button>';
+          }).join("") + '</div>' +
+          '<div class="tabpanel" id="tpanel" role="tabpanel" tabindex="0"><p class="hint">Select a section of the proposal to inspect it.</p></div></div>' +
+        '</section>' +
+        decisionPanel(r, r.tabs.length, "proposal sections") +
+      '</div></div>';
+    var tabs = app.querySelectorAll(".tab");
+    function show(i) {
+      var t = r.tabs[i];
+      Array.prototype.forEach.call(tabs, function (b, j) {
+        b.setAttribute("aria-selected", j === i ? "true" : "false");
+        b.setAttribute("tabindex", j === i ? "0" : "-1");
+      });
+      tabs[i].classList.add("seen");
+      var p = document.getElementById("tpanel");
+      p.setAttribute("aria-labelledby", "tb" + i);
+      p.innerHTML = '<h4>' + t.h + '</h4><p>' + t.p + '</p><div class="facts">' + t.f.map(function (f) { return '<span class="fact"><b>' + f[0] + '</b><span>' + f[1] + '</span></span>'; }).join("") + '</div>';
+      markSeen("t" + i, r.tabs.length, "proposal sections");
+    }
+    Array.prototype.forEach.call(tabs, function (b, idx) {
+      b.addEventListener("click", function () { show(idx); });
+      b.addEventListener("keydown", function (e) {
+        var n = arrowNext(e, idx, tabs.length);
+        if (n !== null) { e.preventDefault(); show(n); tabs[n].focus(); }
+      });
+    });
+    bindVerdicts(r);
+  }
+
+  /* ============ Round 2 ============ */
+  function renderR2() {
+    var r = R2, maxJobs = 31;
+    var rows = r.rows.map(function (x, i) {
+      return '<tr><td colspan="7"><button type="button" class="rbtn" aria-expanded="false" aria-controls="nt' + i + '" data-i="' + i + '">' +
+        '<span class="nm"><span class="rk">#' + (i + 1) + '</span>' + x.n + (x.flag ? '<span class="flagged">Flagged</span>' : '') + '</span>' +
+        '<span class="m" data-l="Jobs done"><span class="num">' + x.jobs + '</span><span class="bar"><i style="width:' + Math.round(x.jobs / maxJobs * 100) + '%"></i></span></span>' +
+        '<span class="m num" data-l="Avg job time">' + x.time + '</span><span class="m num" data-l="App downtime">' + x.down + '</span><span class="m num" data-l="Complex jobs">' + x.cx + '%</span><span class="m num" data-l="Repeat visits">' + x.rep + '</span>' +
+        '<span class="chev">' + ic("chev") + '</span></button>' +
+        '<div class="note" id="nt' + i + '"><b>Team lead context:</b> ' + x.note + '</div></td></tr>';
+    }).join("");
+    app.innerHTML = '<div class="stack fade">' + head(r, 2, "inspect") +
+      '<div class="work">' +
+        '<section class="card">' +
+          '<div class="ev-head"><h3>' + ic("board") + 'Weekly technician dashboard</h3><span class="meter" id="evMeter">0 of 4 inspected</span></div>' +
+          '<div class="dash-wrap"><table class="dash"><thead><tr><th colspan="7" style="padding:0"><div style="display:grid;grid-template-columns:1.9fr .8fr .9fr .9fr .9fr .9fr 28px;gap:6px;padding:10px 12px">' +
+            '<span>Technician</span><span>Jobs done</span><span>Avg job time</span><span>App downtime</span><span>Complex jobs</span><span>Repeat visits</span><span></span></div></th></tr></thead>' +
+          '<tbody>' + rows + '</tbody></table></div>' +
+          '<div class="sys-rec">' + ic("bell") + '<span><b>System recommendation:</b> Marcus T. ranks lowest on jobs completed. Place him on a performance improvement plan.</span></div>' +
+          '<p class="hint" style="margin-top:10px">Select each technician to open the team lead\'s context.</p>' +
+        '</section>' +
+        decisionPanel(r, 4, "technician rows") +
+      '</div></div>';
+    Array.prototype.forEach.call(app.querySelectorAll(".rbtn"), function (b) {
+      b.addEventListener("click", function () {
+        var i = b.getAttribute("data-i"), note = document.getElementById("nt" + i);
+        var open = b.getAttribute("aria-expanded") === "true";
+        b.setAttribute("aria-expanded", open ? "false" : "true");
+        note.classList.toggle("open", !open);
+        if (!open) markSeen("r" + i, 4, "technician rows");
+      });
+    });
+    bindVerdicts(r);
+  }
+
+  /* ============ Round 3 ============ */
+  function renderR3() {
+    var r = R3;
+    app.innerHTML = '<div class="stack fade">' + head(r, 3, "decide") +
+      '<div class="work">' +
+        '<section class="card">' +
+          '<div class="purpose"><small>Stated business purpose</small><b>' + r.purpose + '</b></div>' +
+          '<div class="ev-head"><h3 id="fq">' + ic("form") + 'Which information should the app collect?</h3><span class="meter" id="fCount">0 selected</span></div>' +
+          '<div class="fields" role="group" aria-labelledby="fq">' + r.fields.map(function (f) {
+            return '<button type="button" class="fd" role="checkbox" aria-checked="false" data-k="' + f.k + '"><span class="fi">' + ic(f.icon) + '</span><span><b>' + f.t + '</b><span class="sub">' + f.s + '</span></span><span class="box" aria-hidden="true">' + ic("check") + '</span></button>';
+          }).join("") + '</div>' +
+          '<p class="hint" style="margin-top:10px">Select only the fields needed for the purpose. Every field is available by default.</p>' +
+        '</section>' +
+        '<section class="card dp panel-sticky">' +
+          '<div class="eyebrow">Access</div><h3 id="aq">Who should have access to the information you keep?</h3>' +
+          '<div class="acc" role="radiogroup" aria-labelledby="aq">' + r.access.map(function (a, i) {
+            return '<button type="button" class="ac" role="radio" aria-checked="false" data-i="' + i + '" tabindex="' + (i === 0 ? 0 : -1) + '"><span class="rd" aria-hidden="true"></span>' + a.t + '</button>';
+          }).join("") + '</div>' +
+          '<div class="row" style="margin-top:14px"><span class="hint" id="dHint">Choose at least one field and an access level. One attempt.</span>' +
+          '<button class="btn btn-go" id="decBtn" type="button" disabled>Submit review ' + ic("check") + '</button></div>' +
+        '</section>' +
+      '</div></div>';
+    function sync() {
+      var n = Object.keys(S.fields).filter(function (k) { return S.fields[k]; }).length;
+      document.getElementById("fCount").textContent = n + " selected";
+      document.getElementById("decBtn").disabled = !(n > 0 && S.acc !== null);
+    }
+    Array.prototype.forEach.call(app.querySelectorAll(".fd"), function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-k");
+        S.fields[k] = !S.fields[k];
+        b.setAttribute("aria-checked", S.fields[k] ? "true" : "false");
+        sync();
+      });
+    });
+    var acs = app.querySelectorAll(".ac");
+    function pickA(i) {
+      S.acc = i;
+      Array.prototype.forEach.call(acs, function (b, j) { b.setAttribute("aria-checked", j === i ? "true" : "false"); b.setAttribute("tabindex", j === i ? "0" : "-1"); });
+      sync();
+    }
+    Array.prototype.forEach.call(acs, function (b, idx) {
+      b.addEventListener("click", function () { pickA(idx); });
+      b.addEventListener("keydown", function (e) { var n = arrowNext(e, idx, acs.length); if (n !== null) { e.preventDefault(); pickA(n); acs[n].focus(); } });
+    });
+    document.getElementById("decBtn").addEventListener("click", function () { confirmR3(); });
+  }
+
+  /* ============ Round 4 ============ */
+  function renderR4() {
+    var r = R4;
+    app.innerHTML = '<div class="stack fade">' + head(r, 4, "inspect") +
+      '<div class="work">' +
+        '<section class="card">' +
+          '<div class="ev-head"><h3>' + ic("lens") + 'Incident evidence</h3><span class="meter" id="evMeter">0 of 4 inspected</span></div>' +
+          '<div class="ecards">' + r.evidence.map(function (e, i) {
+            return '<div class="ec" id="ec' + i + '"><button type="button" aria-expanded="false" aria-controls="eb' + i + '" data-i="' + i + '"><span class="ei" style="background:' + e.c + '">' + ic(e.icon) + '</span><span><b>' + e.t + '</b><small>' + e.s + '</small></span></button><div class="body" id="eb' + i + '">' + e.body + '</div></div>';
+          }).join("") + '</div>' +
+        '</section>' +
+        decisionPanel(r, 4, "evidence items") +
+      '</div></div>';
+    Array.prototype.forEach.call(app.querySelectorAll(".ec button"), function (b) {
+      b.addEventListener("click", function () {
+        var i = b.getAttribute("data-i"), card = document.getElementById("ec" + i);
+        var open = card.classList.toggle("open");
+        b.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open) markSeen("e" + i, 4, "evidence items");
+      });
+    });
+    bindVerdicts(r);
+  }
+
+  /* ============ Confirm ============ */
+  function addPts(p) { Object.keys(p || {}).forEach(function (k) { S.pts[k] += p[k]; }); }
+
+  function confirmRound() {
+    if (S.sel === null) return;
+    var ri = S.view - 1, r = ROUNDS[ri], o = r.options[S.sel];
+    S.results[ri] = { v: o.v, tier: o.tier, title: o.title, sel: S.sel };
+    addPts(o.pts);
+    renderQueue();
+    renderOutcome(ri);
+  }
+
+  function confirmR3() {
+    var r = R3, right = 0, extra = false;
+    r.fields.forEach(function (f) { var on = !!S.fields[f.k]; if (on === f.need) right++; if (on && !f.need) extra = true; });
+    var accOk = r.access[S.acc].ok;
+    S.pts.data += right + (accOk ? 1 : 0);
+    if (!extra) S.pts.tech += 1;
+    var allKept = r.fields.every(function (f) { return !!S.fields[f.k]; });
+    var tier = (right === 6 && accOk) ? "best" : ((right >= 4) ? "partial" : "weak");
+    S.results[2] = { v: allKept ? "deploy" : "modify", tier: tier, title: right + " of 6 fields judged correctly", right: right, accOk: accOk };
+    renderQueue();
+    renderOutcome(2);
+  }
+
+  /* ============ Outcome screens ============ */
+  function indicators(ind) {
+    return '<div class="indic">' + IND.map(function (d) {
+      var v = ind[d[0]];
+      return '<div class="ind"><span class="ii">' + ic(d[2]) + '</span><b>' + d[1] + '</b><span class="rt rt-' + v + '">' + RT[v] + '</span></div>';
+    }).join("") + '</div>';
+  }
+  function bestNote(r, o) {
+    if (o.tier === "best") return "";
+    var bi = 0; r.options.forEach(function (x, j) { if (x.tier === "best") bi = j; });
+    return '<div class="better">The strongest response was <b>' + r.options[bi].title + '</b>. ' + r.options[bi].why + '</div>';
+  }
+  function tierLabel(t) { return t === "best" ? "Strongest response" : (t === "partial" ? "Partly responsible &middot; recorded as incorrect" : "Weak response &middot; recorded as incorrect"); }
+
+  function renderOutcome(ri) {
+    var r = ROUNDS[ri], n = ri + 1, res = S.results[ri], body = "", o;
+    var nextLabel = n < 4 ? "Open Review " + (n + 1) : "See the final review";
+
+    if (ri === 2) {
+      var list = r.fields.map(function (f) {
+        var on = !!S.fields[f.k], ok = on === f.need;
+        var status = f.need ? (on ? "Kept, needed" : "Missed, needed") : (on ? "Kept, not needed" : "Removed, not needed");
+        return '<div class="fl"><span class="fx" style="background:' + (ok ? "var(--sea)" : "var(--rose)") + '">' + ic(ok ? "check" : "cross") + '</span><span><b>' + f.t + '</b><span>' + f.fb + '</span></span><em class="rt rt-' + (ok ? "S" : "W") + '">' + status + '</em></div>';
+      }).join("");
+      var accChosen = r.access[S.acc];
+      body =
+        '<section class="card"><div class="eyebrow" style="margin-bottom:10px">Field review against the purpose</div><div class="flist">' + list + '</div></section>' +
+        '<section class="card"><div class="eyebrow" style="margin-bottom:6px">Access</div><p class="why"><b>' + (res.accOk ? "Appropriate access." : "Too broad.") + '</b> You chose: ' + accChosen.t + '. ' +
+          (res.accOk ? "Only the people who need the information to do their jobs can see it." : "Access should be limited to those who need the information to perform their responsibilities: the assigned technician and the dispatch team.") + '</p>' +
+          '<p class="why" style="margin-top:12px">Responsible data use starts with a defined business purpose. The app can collect income, location, and birth date, but being able to collect information does not mean it should be collected or used.</p>' +
+          '<div class="chipset">' + r.concepts.map(function (c) { return '<span class="cc">' + c + '</span>'; }).join("") + '</div></section>';
+      o = { tier: res.tier, head: res.right === 6 && res.accOk ? "The app now collects only what the purpose requires, and only the people who need it can see it." : "The app still collects or shares more, or less, than the purpose requires." };
+    } else {
+      o = r.options[res.sel];
+      if (ri === 0) {
+        body =
+          '<section class="card"><div class="eyebrow" style="margin-bottom:10px">Consequences</div><div class="cons">' +
+            '<div class="cn"><h4>' + ic("gauge") + 'Business operations</h4><p>' + o.ops + '</p></div>' +
+            '<div class="cn" style="border-left-color:var(--violet)"><h4 style="color:var(--violet)">' + ic("users") + 'Employees</h4><p>' + o.emp + '</p></div>' +
+            '<div class="cn" style="border-left-color:var(--mango)"><h4 style="color:var(--mango-d)">' + ic("pin") + 'Accountability</h4><p>' + o.acct + '</p></div>' +
+            '<div class="cn" style="border-left-color:var(--peri)"><h4 style="color:var(--peri)">' + ic("clock") + 'Long-term implementation</h4><p>' + o.lt + '</p></div>' +
+          '</div></section>';
+      } else if (ri === 1) {
+        body =
+          '<section class="card"><div class="eyebrow" style="margin-bottom:10px">What the data did and did not show</div><div class="showed">' +
+            '<div class="sh sh-y"><h4>The data showed</h4><p>' + r.showed + '</p></div>' +
+            '<div class="sh sh-n"><h4>It did not show</h4><p>' + r.notShowed + '</p></div>' +
+          '</div></section>';
+      } else {
+        var names = { T: ["Transparency", "var(--peri)"], C: ["Consistency", "var(--teal)"], A: ["Accountability", "var(--violet)"], R: ["Responsiveness", "var(--mango)"] };
+        body =
+          '<section class="card"><div class="eyebrow" style="margin-bottom:10px">Digital trust check</div><div class="trust4">' +
+            ["T", "C", "A", "R"].map(function (k) {
+              var v = o.t4[k], cls = v[0] === "Yes" ? "S" : (v[0] === "Partly" ? "M" : "W");
+              return '<div class="t4" style="--c:' + names[k][1] + '"><b>' + names[k][0] + '</b><span class="rt rt-' + cls + '">' + (v[0] === "Yes" ? "Addressed" : (v[0] === "Partly" ? "Partly addressed" : "Not addressed")) + '</span><p>' + v[1] + '</p></div>';
+            }).join("") +
+          '</div></section>';
+      }
+      body += '<section class="card"><div class="eyebrow" style="margin-bottom:10px">Stakeholder and trust indicators</div>' + indicators(o.ind) + '</section>' +
+        '<section class="card"><div class="eyebrow" style="margin-bottom:6px">Why this matters</div><p class="why">' + o.why + '</p>' + bestNote(r, o) +
+        '<div class="chipset">' + r.concepts.map(function (c) { return '<span class="cc">' + c + '</span>'; }).join("") + '</div></section>';
+    }
+
+    var vv = V[res.v];
+    app.innerHTML = '<div class="stack fade">' +
+      '<section class="oc-head oc-' + o.tier + '"><span class="big-stamp">' + vv.stamp + '</span>' +
+        '<h2 tabindex="-1" id="screenTitle">' + o.head + '</h2>' +
+        '<p>Review ' + n + ' &middot; ' + r.title + ' &middot; ' + tierLabel(o.tier) + (ri !== 2 ? ' &middot; Your choice: ' + r.options[res.sel].title : '') + '</p>' +
+      '</section>' +
+      body +
+      '<section class="card"><div class="row"><span class="hint">Decision recorded. The next review is ready.</span><button class="btn btn-go" id="nextBtn" type="button">' + nextLabel + ' ' + ic("arrow") + '</button></div></section>' +
+    '</div>';
+    document.getElementById("nextBtn").addEventListener("click", function () { go(n + 1); });
+    scrollTop();
+    focusTitle();
+    say("Outcome for review " + n + " shown.");
+  }
+
+  /* ============ Final ============ */
+  function renderFinal() {
+    var AREAS = [
+      { k: "tech", n: "Technology and stakeholder effects", max: 3, c: "var(--teal)", rev: "Industry 4.0 and responsible innovation: technological capability does not decide whether a use is responsible. Weigh business value and stakeholder consequences together." },
+      { k: "auto", n: "Automation and workforce responsibility", max: 2, c: "var(--violet)", rev: "Automation and work: plan timing, communication, training, reassignment, workforce transition, and human oversight." },
+      { k: "perf", n: "Use of digital performance data", max: 2, c: "var(--peri)", rev: "Digital performance data: understand what a measure represents and combine it with context, human oversight, and managerial judgment." },
+      { k: "data", n: "Responsible data use", max: 7, c: "var(--sea)", rev: "Responsible data use: purpose, relevance, use, and access. Collect only what a defined business need requires." },
+      { k: "trust", n: "Digital trust", max: 2, c: "var(--mango)", rev: "Digital trust: transparency, consistency, accountability, and responsiveness must work together." },
+      { k: "acct", n: "Accountability and human oversight", max: 3, c: "var(--rose)", rev: "Accountability: responsibility stays identifiable when technology acts. Someone must monitor, review problems, and be able to intervene." }
+    ];
+    var strong = 0;
+    var cards = AREAS.map(function (a) {
+      var v = Math.min(S.pts[a.k], a.max), f = v / a.max;
+      var lvl = f >= 0.85 ? ["Strong", "S"] : (f >= 0.5 ? ["Developing", "M"] : ["Review", "W"]);
+      if (lvl[1] === "S") strong++;
+      var seg = ""; for (var i = 0; i < a.max; i++) seg += '<i class="' + (i < v ? "on" : "") + '"></i>';
+      return '<div class="ar" style="--c:' + a.c + '"><div class="at"><h4>' + a.n + '</h4><span class="rt rt-' + lvl[1] + '">' + lvl[0] + '</span></div>' +
+        '<div class="seg" role="img" aria-label="' + v + ' of ' + a.max + '">' + seg + '</div>' +
+        '<p>' + (lvl[1] === "S" ? "Your decisions applied this concept consistently." : '<b>Concept to review:</b> ' + a.rev) + '</p></div>';
+    }).join("");
+    var recap = ROUNDS.map(function (r, i) {
+      var res = S.results[i], vv = V[res.v];
+      var tcls = res.tier === "best" ? "S" : (res.tier === "partial" ? "M" : "W");
+      return '<div class="rc"><small>Review ' + (i + 1) + ' &middot; ' + r.short + '</small><b>' + res.title + '</b><span class="rt rt-' + tcls + '">' + (res.tier === "best" ? "Strongest" : (res.tier === "partial" ? "Partly responsible" : "Weak")) + '</span> <span class="rt ' + vv.cls + '" style="border:1.5px solid currentColor;background:#fff">' + vv.stamp + '</span></div>';
+    }).join("");
+
+    app.innerHTML = '<div class="stack fade">' +
+      '<section class="hero"><div class="eb">Corvane &middot; Modernization project</div>' +
+        '<h1 tabindex="-1" id="screenTitle">Digital Responsibility Review</h1>' +
+        '<p>You showed strong judgment in ' + strong + ' of 6 areas. Each area below reflects the decisions you made across the four reviews.</p></section>' +
+      '<div class="areas">' + cards + '</div>' +
+      '<section class="card"><div class="eyebrow" style="margin-bottom:10px">Your review decisions</div><div class="recap">' + recap + '</div>' +
+        '<div class="row" style="margin-top:18px"><span class="hint">Restart to see how different decisions change Corvane\'s outcomes.</span>' +
+        '<button class="btn btn-alt" id="again" type="button">' + ic("restart") + ' Restart review</button></div></section>' +
+    '</div>';
+    document.getElementById("again").addEventListener("click", function () { reset(); go(0); });
+  }
+
+  /* ============ Navigation ============ */
+  function scrollTop() { try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) { window.scrollTo(0, 0); } }
+  function focusTitle() { var t = document.getElementById("screenTitle"); if (t) { try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } } }
+  function go(v) {
+    S.view = v; S.seen = {}; S.sel = null; S.acc = null; S.fields = {};
+    renderQueue();
+    if (v === 0) renderIntro();
+    else if (v === 1) renderR1();
+    else if (v === 2) renderR2();
+    else if (v === 3) renderR3();
+    else if (v === 4) renderR4();
+    else renderFinal();
+    scrollTop();
+    if (v !== 0) focusTitle();
+  }
+
+  reset();
+  go(0);
+})();
+</script>
+</body>
+</html>
